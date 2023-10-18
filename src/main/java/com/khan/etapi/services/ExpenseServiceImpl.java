@@ -1,6 +1,7 @@
 package com.khan.etapi.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,5 +20,17 @@ public class ExpenseServiceImpl implements ExpenseService{
 		// TODO Auto-generated method stub
 		return expenseRepository.findAll();
 	}
+
+	@Override
+	public Expense getExpenseById(Long id) {
+		// TODO Auto-generated method stub
+		Optional<Expense> expense = expenseRepository.findById(id);
+		if (expense.isPresent()) {
+			return expense.get();
+		}
+		throw new RuntimeException("Expense is not found for the id " + id);
+
+	}
+
 
 }
