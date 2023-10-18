@@ -30,8 +30,8 @@ public class ExpenseController {
 
 	
 	@DeleteMapping("/expenses")
-	public String deleteExpenseById(@RequestParam("id") Long id) {
-		return "Delete the expense object by id: " + id;
+	public void deleteExpenseById(@RequestParam("id") Long id) {
+		expenseService.deleteExpenseById(id);
 	}
 
 }

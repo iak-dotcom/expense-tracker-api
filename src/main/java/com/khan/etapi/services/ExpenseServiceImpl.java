@@ -32,5 +32,11 @@ public class ExpenseServiceImpl implements ExpenseService{
 
 	}
 
+	@Override
+	public void deleteExpenseById(Long id) {
+		// TODO Auto-generated method stub
+		expenseRepository.deleteById(id);
+	}
+
 
 }
