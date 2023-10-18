@@ -38,5 +38,11 @@ public class ExpenseServiceImpl implements ExpenseService{
 		expenseRepository.deleteById(id);
 	}
 
+	@Override
+	public Expense saveExpenseDetails(Expense expense) {
+		// TODO Auto-generated method stub
+		return expenseRepository.save(expense);
+	}
+
 
 }
