@@ -1,9 +1,10 @@
 package com.khan.etapi.services;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.khan.etapi.entities.Expense;
@@ -16,9 +17,9 @@ public class ExpenseServiceImpl implements ExpenseService{
 	private ExpenseRepository expenseRepository;
 	
 	@Override
-	public List<Expense> getAllExpenses() {
+	public Page<Expense> getAllExpenses(Pageable page) {
 		// TODO Auto-generated method stub
-		return expenseRepository.findAll();
+		return expenseRepository.findAll(page);
 	}
 
 	@Override
