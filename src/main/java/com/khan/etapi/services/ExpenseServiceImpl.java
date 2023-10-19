@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.khan.etapi.entities.Expense;
+import com.khan.etapi.exceptions.ResourceNotFoundException;
 import com.khan.etapi.repos.ExpenseRepository;
 
 @Service
@@ -29,7 +30,7 @@ public class ExpenseServiceImpl implements ExpenseService{
 		if (expense.isPresent()) {
 			return expense.get();
 		}
-		throw new RuntimeException("Expense is not found for the id " + id);
+		throw new ResourceNotFoundException("Expense is not found for the id " + id);
 
 	}
 
