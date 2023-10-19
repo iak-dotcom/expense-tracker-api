@@ -1,5 +1,7 @@
 package com.khan.etapi.services;
 
+import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,30 @@ existingExpense.setDate
 
 	}
 
+	@Override
+	public List<Expense> readByCategory(String category, Pageable page) {
+		return expenseRepository.findByCategory(category, page).toList();
+	}
+
+	@Override
+	public List<Expense> readByName(String keyword, Pageable page) {
+		return expenseRepository.findByNameContaining(keyword, page).toList();
+	}
 
 
-}
+	@Override
+	public List<Expense> readByDate(Date startDate, Date endDate, Pageable page) {
+		if(startDate ==null) {
+			startDate = new Date(0);
+		}
+		if(endDate==null) {
+			endDate= new Date(System.currentTimeMillis());
+		}
+		Page<Expense>pages=expenseRepository.findByDateBetween(startDate, endDate, page);
+		return expenseRepository.findByDateBetween(startDate, endDate, page).toList();
+	}
+
+	}
+
+
+

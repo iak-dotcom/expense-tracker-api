@@ -1,5 +1,6 @@
 package com.khan.etapi.controllers;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -51,5 +52,22 @@ public class ExpenseController {
 	public void deleteExpenseById(@RequestParam("id") Long id) {
 		expenseService.deleteExpenseById(id);
 	}
+	
+	//Filter the records by category
+	@GetMapping("/expenses/category")
+	public List<Expense>getExpenseByCategory(@RequestParam String category, Pageable page){
+		return expenseService.readByCategory(category, page);
+	}
+	//Filter the records by name
+	@GetMapping("/expenses/name")
+	public List<Expense>getExpenseByName(@RequestParam String keyword, Pageable page){
+		return expenseService.readByName(keyword, page);
+		}
+	@GetMapping("/expenses/date")
+	public List<Expense>getExpenseByDates(@RequestParam(required=false) Date startDate,
+											@RequestParam(required=false) Date endDate, Pageable page){
+		
+		return expenseService.readByDate(startDate, endDate, page);
 
+}
 }
