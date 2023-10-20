@@ -38,7 +38,7 @@ public class ExpenseServiceImpl implements ExpenseService{
 
 	@Override
 	public void deleteExpenseById(Long id) {
-		// TODO Auto-generated method stub
+		Expense expense =getExpenseById(id);
 		expenseRepository.deleteById(id);
 	}
 
@@ -92,6 +92,7 @@ existingExpense.setDate
 		Page<Expense>pages=expenseRepository.findByDateBetween(startDate, endDate, page);
 		return expenseRepository.findByDateBetween(startDate, endDate, page).toList();
 	}
+
 
 	}
 
