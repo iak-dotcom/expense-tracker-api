@@ -14,21 +14,26 @@ import com.khan.etapi.exceptions.ResourceNotFoundException;
 import com.khan.etapi.repos.ExpenseRepository;
 
 @Service
-public class ExpenseServiceImpl implements ExpenseService{
-	
+public class ExpenseServiceImpl implements ExpenseService {
+
 	@Autowired
 	private ExpenseRepository expenseRepository;
-	
+
+	@Autowired
+	private UserService userService;
+
 	@Override
 	public Page<Expense> getAllExpenses(Pageable page) {
-		// TODO Auto-generated method stub
-		return expenseRepository.findAll(page);
+//only user can see the expenses of his own id.
+		return expenseRepository.findByUserId(userService.getLoggedInUser().getId(), page);
 	}
+
+//(To see all user expenses)		return expenseRepository.findAll(page);
 
 	@Override
 	public Expense getExpenseById(Long id) {
 		// TODO Auto-generated method stub
-		Optional<Expense> expense = expenseRepository.findById(id);
+		Optional<Expense> expense = expenseRepository.findByUserIdAndId(userService.getLoggedInUser().getId(), id);
 		if (expense.isPresent()) {
 			return expense.get();
 		}
@@ -38,13 +43,14 @@ public class ExpenseServiceImpl implements ExpenseService{
 
 	@Override
 	public void deleteExpenseById(Long id) {
-		Expense expense =getExpenseById(id);
+		Expense expense = getExpenseById(id);
 		expenseRepository.deleteById(id);
 	}
 
 	@Override
 	public Expense saveExpenseDetails(Expense expense) {
-		// TODO Auto-generated method stub
+		// now we can save expense in database
+		expense.setUser(userService.getLoggedInUser());
 		return expenseRepository.save(expense);
 	}
 
@@ -52,19 +58,17 @@ public class ExpenseServiceImpl implements ExpenseService{
 	public Expense updateExpenseDetails(Long id, Expense expense) {
 		Expense existingExpense = getExpenseById(id);
 
-existingExpense.setName(expense.getName() != null ? expense.getName() : existingExpense.getName());
+		existingExpense.setName(expense.getName() != null ? expense.getName() : existingExpense.getName());
 
-existingExpense.setDescription(
+		existingExpense.setDescription(
 				expense.getDescription() != null ? expense.getDescription() : existingExpense.getDescription());
 
-existingExpense.setCategory
-				(expense.getCategory() != null ? expense.getCategory() : existingExpense.getCategory());
+		existingExpense
+				.setCategory(expense.getCategory() != null ? expense.getCategory() : existingExpense.getCategory());
 
-existingExpense.setAmount
-				(expense.getAmount() != null ? expense.getAmount() : existingExpense.getAmount());
+		existingExpense.setAmount(expense.getAmount() != null ? expense.getAmount() : existingExpense.getAmount());
 
-existingExpense.setDate
-				(expense.getDate() != null ? expense.getDate() : existingExpense.getDate());
+		existingExpense.setDate(expense.getDate() != null ? expense.getDate() : existingExpense.getDate());
 
 		return expenseRepository.save(existingExpense);
 
@@ -72,29 +76,24 @@ existingExpense.setDate
 
 	@Override
 	public List<Expense> readByCategory(String category, Pageable page) {
-		return expenseRepository.findByCategory(category, page).toList();
+		return expenseRepository.findByUserIdAndCategory(userService.getLoggedInUser().getId(),category, page).toList();
 	}
 
 	@Override
 	public List<Expense> readByName(String keyword, Pageable page) {
-		return expenseRepository.findByNameContaining(keyword, page).toList();
+		return expenseRepository.findByUserIdAndNameContaining(userService.getLoggedInUser().getId(),keyword, page).toList();
 	}
-
 
 	@Override
 	public List<Expense> readByDate(Date startDate, Date endDate, Pageable page) {
-		if(startDate ==null) {
+		if (startDate == null) {
 			startDate = new Date(0);
 		}
-		if(endDate==null) {
-			endDate= new Date(System.currentTimeMillis());
+		if (endDate == null) {
+			endDate = new Date(System.currentTimeMillis());
 		}
-		Page<Expense>pages=expenseRepository.findByDateBetween(startDate, endDate, page);
-		return expenseRepository.findByDateBetween(startDate, endDate, page).toList();
+		
+		return expenseRepository.findByUserIdAndDateBetween(userService.getLoggedInUser().getId(),startDate, endDate, page).toList();
 	}
 
-
-	}
-
-
-
+}

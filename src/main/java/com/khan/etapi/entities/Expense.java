@@ -6,15 +6,23 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,13 +46,13 @@ public class Expense {
 	private String description;
 	
 	@Column(name = "expense_amount")
-	@NotBlank(message = "Expense amount must not be null or Blank!")
+	@NotNull(message = "Expense amount must not be null or Blank!")
 	private BigDecimal amount;
 	
 	@NotBlank(message = "Expense category must not be null or Blank!")
 	private String category;
 	
-	@NotBlank(message = "Expense date must not be null or Blank!")
+	@NotNull(message = "Expense date must not be null or Blank!")
 	private Date date;
 
 	@Column(name="created_at",nullable = false, updatable=false)
@@ -54,5 +62,12 @@ public class Expense {
 	@Column(name="updated_at")
 	@UpdateTimestamp
 	private Timestamp updatedAt;
+
+	//Uni-direction approach
+	@ManyToOne(fetch=FetchType.LAZY, optional = false)
+	@JoinColumn(name="user_id",nullable=false)
+	@OnDelete(action=OnDeleteAction.CASCADE)
+	@JsonIgnore
+	private User user;
 
 }
